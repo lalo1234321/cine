@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const { json } = require('body-parser');
 const { Router } = require('express');
 const router = Router();
@@ -50,4 +51,3 @@ router.put("/updateUser/:id", async (req, res) => {
 
 });
 
-module.exports = router;
