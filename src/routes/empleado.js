@@ -15,14 +15,11 @@ router.get('/getUsers', async (req, res) => {
     //sql = "";
     let result = await BD.Open(sql, [], true);
     console.log(result.rows);
+
     res.json({
         Empleados:result.rows
-         
     });
 });
-
-
-   
 
 router.post('/addUser', async (req, res) => {
     const { idempleado, nombre, edad, sueldo } = req.body;
@@ -50,3 +47,4 @@ router.put("/updateUser/:id", async (req, res) => {
 
 });
 
+module.exports = router;

@@ -4,7 +4,8 @@ const cors = require('cors');
 const app = express();
 
 //imports
-const empleado = require('./routes/empleado');
+//const empleado = require('./routes/empleado');
+const register = require('./routes/register');
 
 //settings
 app.set('port', 3000);
@@ -15,7 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //routes
-app.use(empleado);
+//app.use(empleado);
+app.use(register);
 
 
 
@@ -23,5 +25,3 @@ app.use(empleado);
 app.listen(app.get('port'), () => {
     console.log('Server on Port 3000')
 })
-
-
