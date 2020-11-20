@@ -6,7 +6,7 @@ require('dotenv').config();
 //imports
 //const empleado = require('./routes/empleado');
 const register = require('./routes/register');
-
+const login = require('./routes/login');
 //settings
 app.set('port', 3000);
 
@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 //routes
 //app.use(empleado);
 app.use(register);
+app.use(login);
 
 
 

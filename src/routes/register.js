@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const bcrypt = require('bcrypt');
 const router = Router();
 const BD = require('../config/oracle.js');
 
@@ -12,7 +13,9 @@ router.get('/',(req,res) => {
 
 router.post('/registerUser',async (req,res) => {
     //2,'Duck','Worth',20,'duckworth19@gmail.com','password1'
-    const {firstname, lastname, age, email, password} = req.body;
+    let {firstname, lastname, age, email, password} = req.body;
+    password = bcrypt.hashSync(password,5);
+    console.log(password);
     let idUser;
     try {
         sql = "insert into users(idUser,firstName,lastName,age,email,password) values (user_idUser_seq.NEXTVAL,:firstname,:lastname,:age,:email,:password)";
@@ -31,25 +34,61 @@ router.post('/registerUser',async (req,res) => {
     }   
 });
 
+router.post('/registerAdmin',async (req,res)=>{
+    let {firstname, lastname, age, email, password} = req.body;
+    password = bcrypt.hashSync(password,5);
+    console.log(password);
+    let result;
+    try{
+        console.log('antes de sql');
+        sql = "insert into users(idUser,firstName,lastName,age,email,password) values (user_idUser_seq.NEXTVAL,:firstname,:lastname,:age,:email,:password)";
+        await BD.Open(sql,[firstname,lastname,age,email,password],true);
+        console.log('despues del open');
+        result = await UserQuery(email);
+        console.log(result.rows[0][1]);
+        await adminRegistration(result.rows[0][0]);
+        res.status(200).json({
+        resultado:'Información grabada en la base de datos',
+        hint:result.rows[0][0]
+
+        }); 
+    }catch (error){
+        res.status(500).json({
+            message:'Admin existente, intente con un nuevo Usuario'
+        });
+    }
+});
+
+
 //Usuarios registrados
-router.get('/getUsers', async (req, res) => {
+router.get('/getClients', async (req, res) => {
     sql = "select * from users inner join client on users.iduser = client.iduser";
     let result = await BD.Open(sql, [], true);
     res.json({
         Registros:result.rows
     });
-    /*sql = "select * from users  inner join client  on users.iduser = client.iduser";
+});
+
+router.get('/getAdmins', async (req, res) => {
+    sql = "select * from users inner join admin on users.iduser = admin.iduser";
     let result = await BD.Open(sql, [], true);
-    //console.log(result.rows);
     res.json({
         Registros:result.rows
-    });*/
+    });
 });
 
 async function clientRegistration  (idUser){
     let idClient = idUser;
     sql = "insert into client(idClient, idUser, premium) values (:idClient,:idUser,default)";
     await BD.Open(sql,[idClient,idUser],true);
+    console.log('ok');
+    return true; 
+}
+
+    async function adminRegistration(idUser){
+    let idAdmin = idUser;
+    sql = "insert into admin(idAdmin, idUser) values (:idAdmin,:idUser)";
+    await BD.Open(sql,[idAdmin,idUser],true);
     console.log('ok');
     return true; 
 }
