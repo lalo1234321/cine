@@ -2,8 +2,8 @@ const oracledb = require('oracledb');
 
 
 cns = {
-    user: "cinema",
-    password: "cinema" ,
+    user: process.env.BD,
+    password: process.env.BD_PASSWORD ,
     connectString: "localhost/orcl"
 }
 
