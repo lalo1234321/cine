@@ -11,7 +11,7 @@ router.get('/',(req,res) => {
     });
 });
 
-router.post('/registerUser',async (req,res) => {
+router.post('/registerClient',async (req,res) => {
     //2,'Duck','Worth',20,'duckworth19@gmail.com','password1'
     let {firstname, lastname, age, email, password} = req.body;
     password = bcrypt.hashSync(password,5);

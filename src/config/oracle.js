@@ -4,7 +4,7 @@ const oracledb = require('oracledb');
 cns = {
     user: process.env.BD,
     password: process.env.BD_PASSWORD ,
-    connectString: "localhost/orcl"
+    connectString: `localhost/${process.env.SERVICE_NAME}`
 }
 
 async function Open(sql,binds,autoCommit) {
