@@ -17,7 +17,7 @@ firstName varchar2(20) NOT NULL,
 lastName varchar2(20) NOT NULL,
 age number(2) NOT NULL, 
 email varchar2(30) UNIQUE NOT NULL, 
-password varchar2(50) NOT NULL,
+password varchar2(100) NOT NULL,
 CONSTRAINT cte_pk_user PRIMARY KEY(idUser));
 
 CREATE TABLE admin ( 
