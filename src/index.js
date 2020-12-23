@@ -9,6 +9,7 @@ const register = require('./routes/register');
 const login = require('./routes/login');
 const registerGenre = require('./routes/adminRegisterGenres');
 const registerMovie = require('./routes/registerMovie');
+const registerCinema = require('./routes/registerCinema');
 //settings
 app.set('port', 3000);
 
@@ -23,7 +24,7 @@ app.use(register);
 app.use(login);
 app.use(registerGenre);
 app.use(registerMovie);
-
+app.use(registerCinema);
 
 //run
 app.listen(app.get('port'), () => {

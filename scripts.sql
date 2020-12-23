@@ -13,7 +13,25 @@ NOCYCLE;
 
 CREATE SEQUENCE movie_idMovie_seq
 INCREMENT BY 1
-START WITH 4
+START WITH 1
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE lobby_idLobby_seq
+INCREMENT BY 1
+START WITH 1
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE seat_idSeat_seq
+INCREMENT BY 1
+START WITH 1
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE cinema_idCinema_seq
+INCREMENT BY 1
+START WITH 1
 NOCACHE
 NOCYCLE;
 
@@ -61,6 +79,7 @@ CONSTRAINT cte_pk_gender PRIMARY KEY (idGender));
 CREATE TABLE lobby ( 
 idLobby number(2), 
 idCinema number(6),
+lobbyNumber number(2) NOT NULL,
 CONSTRAINT cte_pk_lobby PRIMARY KEY (idLobby),
 CONSTRAINT lobby_fk_cinema FOREIGN KEY (idCinema)
 REFERENCES cinema (idCinema));
@@ -70,7 +89,7 @@ idMovie number (6),
 idGender number(6) NOT NULL,
 duration number(3) NOT NULL, 
 name varchar2(20) NOT NULL, 
-posterImage varchar2(20) NOT NULL,
+posterImage varchar2(100) NOT NULL,
 CONSTRAINT cte_pk_movie PRIMARY KEY (idMovie),
 CONSTRAINT movie_fk_gender FOREIGN KEY (idGender)
 REFERENCES gender (idGender));
@@ -78,6 +97,7 @@ REFERENCES gender (idGender));
 CREATE TABLE seat ( 
 idSeat number(2) NOT NULL, 
 idLobby number(2) NOT NULL,
+seatNumber number(2) NOT NULL,
 CONSTRAINT cte_pk_seat PRIMARY KEY (idSeat),
 CONSTRAINT seat_fk_lobby FOREIGN KEY (idLobby)
 REFERENCES lobby (idLobby));

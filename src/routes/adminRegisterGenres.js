@@ -6,6 +6,7 @@ const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
 router.post('/registerGenre',[verifyToken,verifyAdmin],async(req,res)=>{
     let {idGender, name} = req.body;
     try {
+        //console.log(req.id);
         sql = "insert into gender values(:idGender,:name)";
         await BD.Open(sql,[idGender,name],true);
         res.status(200).json({
