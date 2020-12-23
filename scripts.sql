@@ -11,6 +11,12 @@ START WITH 1
 NOCACHE
 NOCYCLE;
 
+CREATE SEQUENCE movie_idMovie_seq
+INCREMENT BY 1
+START WITH 4
+NOCACHE
+NOCYCLE;
+
 CREATE TABLE users ( 
 idUser number(6), 
 firstName varchar2(20) NOT NULL,
