@@ -2,6 +2,9 @@ const { Router } = require('express');
 const bcrypt = require('bcrypt');
 const router = Router();
 const BD = require('../config/oracle.js');
+const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
+const { route } = require('./login.js');
+
 
 router.get('/',(req,res) => {
     res.status(200).json({
@@ -61,13 +64,34 @@ router.post('/registerAdmin',async (req,res)=>{
 
 
 //Usuarios registrados
-router.get('/getClients', async (req, res) => {
-    sql = "select * from users inner join client on users.iduser = client.iduser";
+router.get('/getClients',[verifyToken,verifyAdmin], async (req, res) => {
+    sql = "select u.idUser,u.firstName,u.lastName,u.age,u.email,c.idClient,c.premium from users u inner join client c on u.iduser = c.iduser";
     let result = await BD.Open(sql, [], true);
     res.json({
         Registros:result.rows
     });
 });
+
+//cliente por id
+router.get('/getClientById/:idClient',[verifyToken,verifyAdmin], async (req, res) => {
+    let idClient = req.params.idClient;
+    console.log(idClient);
+    sql = "select u.idUser, u.firstName, u.age, u.email, c.idClient from users u join client c on (u.idUser=c.idUser) where c.idClient=:idClient";
+    let result = await BD.Open(sql, [idClient], true);
+    res.json({
+        Registros:result.rows
+    });
+});
+
+router.get('/getClientByEmail/:email',[verifyToken,verifyAdmin], async (req, res) => {
+    let email = req.params.email;
+    sql = "select u.idUser,u.firstName, u.age, u.email,c.idClient from users u, client c where u.idUser=c.idUser and u.email=:email";
+    let result = await BD.Open(sql, [email], true);
+    res.json({
+        Registros:result.rows
+    });
+});
+
 
 router.get('/getAdmins', async (req, res) => {
     sql = "select * from users inner join admin on users.iduser = admin.iduser";
@@ -99,3 +123,6 @@ async function UserQuery (email) {
     return result;
 }
 module.exports = router;
+
+
+// select u.idUser,u.firstName, u.age, u.email,c.idClient from users u, client c where u.idUser=c.idUser and u.email='registro1@gmail.com';
