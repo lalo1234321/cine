@@ -92,7 +92,6 @@ router.get('/getClientByEmail/:email',[verifyToken,verifyAdmin], async (req, res
     });
 });
 
-
 router.get('/getAdmins', async (req, res) => {
     sql = "select * from users inner join admin on users.iduser = admin.iduser";
     let result = await BD.Open(sql, [], true);
