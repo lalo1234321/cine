@@ -30,6 +30,40 @@ router.post('/registerCinema',[verifyToken,verifyAdmin], async (req,res) => {
 
 });
 
+
+router.get('/getAllCinemasData',[verifyToken,verifyAdmin],async(req,res) => {
+    sql ="select c.idCinema, c.name, c.location ,count(distinct(l.idLobby))  lobbies , count(distinct(s.idSeat))/count(distinct(l.idLobby))  seatsPerLobby from cinema c join lobby l on(c.idCinema=l.idCinema) join seat s on(l.idLobby=s.idLobby)  group by c.idCinema, c.name, c.location ORDER BY c.idCinema";
+    try{
+        let result = await BD.Open(sql, [], true);
+        res.status(200).json({
+            Registros:result.rows
+        });
+    } catch(error) {
+        res.status(500).json({
+            ok:false,
+            message:error
+        });
+    }
+});
+
+router.get('/getCinemaData/:name/:location',[verifyToken,verifyAdmin], async(req,res) => {
+    let {name, location} = req.params
+    console.log(name);
+    console.log(location);
+    sql ="select c.idCinema, c.name, c.location ,count(distinct(l.idLobby))  lobbies , count(distinct(s.idSeat))/count(distinct(l.idLobby))  seatsPerLobby from cinema c join lobby l on(c.idCinema=l.idCinema) join seat s on(l.idLobby=s.idLobby) group by c.idCinema, c.name, c.location HAVING c.name=:name AND c.location=:location";
+    try {
+        let result = await BD.Open(sql,[name,location], true);
+        res.status(200).json({
+            Registros : result.rows 
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok:false,
+            message:error
+        });
+    }
+});
+
 const createLobby =  async (numberOfLobbies, numberOfSeatPerLobby, idCinema) => {
     let result;
     let idLobby;
@@ -86,3 +120,5 @@ const createSeats = async (idLobby,numberOfSeatPerLobby) => {
 module.exports = router;
 
 // insert into seat values (seat_idSeat_seq.NEXTVAL,4,1);
+
+//select c.idCinema, c.name, c.location ,count(l.idLobby) from cinema c join lobby l on (c.idCinema=l.idCinema) group by c.location;
