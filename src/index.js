@@ -10,6 +10,7 @@ const login = require('./routes/login');
 const registerGenre = require('./routes/adminRegisterGenres');
 const registerMovie = require('./routes/registerMovie');
 const registerCinema = require('./routes/registerCinema');
+const movieLobby = require('./routes/movieLobby');
 //settings
 app.set('port', 3000);
 
@@ -25,7 +26,7 @@ app.use(login);
 app.use(registerGenre);
 app.use(registerMovie);
 app.use(registerCinema);
-
+app.use(movieLobby);
 //run
 app.listen(app.get('port'), () => {
     console.log('Server on Port 3000')
