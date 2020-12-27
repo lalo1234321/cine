@@ -4,6 +4,7 @@ const { format } = require('morgan');
 const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
+const LogRegisterCinema = require('debug')('registerCinema:registerCinema');
 
 router.post('/registerCinema',[verifyToken,verifyAdmin], async (req,res) => {
     let {name, location, numberOfLobbies, numberOfSeatPerLobby} = req.body;
@@ -15,19 +16,18 @@ router.post('/registerCinema',[verifyToken,verifyAdmin], async (req,res) => {
         sql = "insert into cinema values (cinema_idCinema_seq.NEXTVAL,:idAdmin,:name,:location)";
         await BD.Open(sql,[idAdmin,name,location],true);
         idCinema = await cinemaQuery(name,location);
+        LogRegisterCinema('idCinema: ', idCinema);
         await createLobby(numberOfLobbies, numberOfSeatPerLobby, idCinema);
         res.status(200).json({
-                ok:true,
-                message:'Cine registrado exitosamente en la base de datos'
-            });
+            ok:true,
+            message:'Cine registrado exitosamente en la base de datos'
+        });
     } catch (error) {
+        LogRegisterCinema(error);
         res.status(500).json({
             error
         });
     }
-    
-
-
 });
 
 

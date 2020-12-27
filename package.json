@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "config": {
+    "debugFile": "registerCinema:registerCinema"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debugWindows": "set DEBUG=registerCinema:registerCinema & node src/index.js", 
+    "debugLinux": "DEBUG=$npm_package_config_debugfile node src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +23,9 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.5",
     "oracledb": "^5.0.0"
+  },
+  "devDependencies": {
+    "debug": "^4.3.1"
   }
 }
+

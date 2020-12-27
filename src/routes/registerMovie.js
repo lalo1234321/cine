@@ -4,6 +4,7 @@ const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
 const { route } = require('./login.js');
+const Log = require('debug')('registerMovie');
 
 router.post('/registerMovie',[verifyToken,verifyAdmin], async (req,res) => {
     let {idGender, duration, name, posterImage} = req.body;
@@ -26,7 +27,7 @@ router.post('/registerMovie',[verifyToken,verifyAdmin], async (req,res) => {
 
 router.get('/getMovieByName/:name',[verifyToken,verifyAdmin], async (req,res) => {
     let name = req.params.name;
-    console.log(name);
+    Log('line 30   name: ', name);
     sql = "select m.idMovie, m.duration, m.name, m.posterImage,g.name from movie m join gender g using (idGender) where m.name=:name";
     let result = await BD.Open(sql,[name],true);
     res.json({

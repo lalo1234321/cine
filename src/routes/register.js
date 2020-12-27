@@ -4,6 +4,13 @@ const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
 const { route } = require('./login.js');
+var LogRegisterAdmin = require('debug')('register:registerAdmin'),
+LogDecreaseSequenceNumber = require('debug')('register:decreaseSequenceNumber'),
+LogRegisterClient = require('debug')('register:registerClient'),
+LogGetClients = require('debug')('register:getClients'),
+LogGetClientById = require('debug')('register:getClientById'),
+LogGetClientByEmail = require('debug')('register:getClientByEmail'),
+LogGetAdmins = require('debug')('register:getAdmins');
 
 
 router.get('/',(req,res) => {
@@ -23,13 +30,17 @@ router.post('/registerClient',async (req,res) => {
         sql = "insert into users(idUser,firstName,lastName,age,email,password) values (user_idUser_seq.NEXTVAL,:firstname,:lastname,:age,:email,:password)";
         await BD.Open(sql,[firstname,lastname,age,email,password],true);
         result =  await UserQuery(email);
+        LogRegisterClient('result: ', result);
         await clientRegistration(result.rows[0][0]);
+        LogRegisterClient('result.rows: ', result.rows);
         res.status(200).json({
         resultado:'Información grabada en la base de datos',
         hint:result.rows[0][0]
 
         });
     } catch (error) {
+        LogRegisterClient(error);
+        decreaseSequenceNumber();
         res.status(500).json({
             error
         });
@@ -44,13 +55,17 @@ router.post('/registerAdmin',async (req,res)=>{
         sql = "insert into users(idUser,firstName,lastName,age,email,password) values (user_idUser_seq.NEXTVAL,:firstname,:lastname,:age,:email,:password)";
         await BD.Open(sql,[firstname,lastname,age,email,password],true);
         result = await UserQuery(email);
+        LogRegisterAdmin('result: ', result);
         await adminRegistration(result.rows[0][0]);
+        LogRegisterAdmin('result.rows: ', result.rows);
         res.status(200).json({
         resultado:'Información grabada en la base de datos',
         hint:result.rows[0][0]
 
         }); 
     }catch (error){
+        LogRegisterAdmin(error);
+        decreaseSequenceNumber();        
         res.status(500).json({
             error
         });
@@ -62,6 +77,7 @@ router.post('/registerAdmin',async (req,res)=>{
 router.get('/getClients',[verifyToken,verifyAdmin], async (req, res) => {
     sql = "select u.idUser,u.firstName,u.lastName,u.age,u.email,c.idClient,c.premium from users u inner join client c on u.iduser = c.iduser";
     let result = await BD.Open(sql, [], true);
+    LogGetClients('result: ', result);
     res.json({
         Registros:result.rows
     });
@@ -72,6 +88,7 @@ router.get('/getClientById/:idClient',[verifyToken,verifyAdmin], async (req, res
     let idClient = req.params.idClient;
     sql = "select u.idUser, u.firstName, u.age, u.email, c.idClient from users u join client c on (u.idUser=c.idUser) where c.idClient=:idClient";
     let result = await BD.Open(sql, [idClient], true);
+    LogGetClientById('result: ', result);
     res.json({
         Registros:result.rows
     });
@@ -81,6 +98,7 @@ router.get('/getClientByEmail/:email',[verifyToken,verifyAdmin], async (req, res
     let email = req.params.email;
     sql = "select u.idUser,u.firstName, u.age, u.email,c.idClient from users u, client c where u.idUser=c.idUser and u.email=:email";
     let result = await BD.Open(sql, [email], true);
+    LogGetClientByEmail('resut: ', result);
     res.json({
         Registros:result.rows
     });
@@ -91,6 +109,7 @@ router.get('/getClientByEmail/:email',[verifyToken,verifyAdmin], async (req, res
 router.get('/getAdmins', async (req, res) => {
     sql = "select * from users inner join admin on users.iduser = admin.iduser";
     let result = await BD.Open(sql, [], true);
+    LogGetAdmins('result: ', result);
     res.json({
         Registros:result.rows
     });
@@ -103,7 +122,7 @@ async function clientRegistration  (idUser){
     return true; 
 }
 
-    async function adminRegistration(idUser){
+async function adminRegistration(idUser){
     let idAdmin = idUser;
     sql = "insert into admin(idAdmin, idUser) values (:idAdmin,:idUser)";
     await BD.Open(sql,[idAdmin,idUser],true);
@@ -115,6 +134,23 @@ async function UserQuery (email) {
 
     return result;
 }
+//This function is triggered when a register with a repeated email is inserted
+const decreaseSequenceNumber = async () => {
+    try {
+        LogDecreaseSequenceNumber('\nALTER SEQUENCE user_idUser_seq INCREMENT BY -1');
+        let connection = await BD.getConnection();
+        sql = "ALTER SEQUENCE user_idUser_seq INCREMENT BY -1";
+        await connection.execute(sql);
+        sql = "SELECT user_idUser_seq.NEXTVAL FROM dual";
+        await connection.execute(sql);
+        sql = "ALTER SEQUENCE user_idUser_seq INCREMENT BY 1";
+        await connection.execute(sql);
+        await connection.close();
+    }catch(e) {
+        LogDecreaseSequenceNumber('Error: \n', e);
+    }
+}
+
 module.exports = router;
 
 
