@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debugWindows": "set DEBUG=registerCinema:registerCinema & node src/index.js", 
+    "debugWindows": "set DEBUG=registerCinema:registerCinema & node src/index.js",
     "debugLinux": "DEBUG=$npm_package_config_debugfile node src/index.js"
   },
   "author": "",
@@ -28,4 +28,3 @@
     "debug": "^4.3.1"
   }
 }
-

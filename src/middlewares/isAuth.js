@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const BD = require('../config/oracle.js');
-const { connect } = require('../routes/register.js');
 
 exports.verifyToken=(req,res,next) => {
     let token = req.header('token');
