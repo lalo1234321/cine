@@ -14,4 +14,8 @@ async function Open(sql,binds,autoCommit) {
     return result;
 }
 
-exports.Open = Open;
+const getConnection = () => {
+    return oracledb.getConnection(cns);
+}
+
+module.exports = { Open, getConnection};
