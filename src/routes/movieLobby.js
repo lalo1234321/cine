@@ -29,7 +29,22 @@ router.post('/registerMovieLobby',[verifyToken,verifyAdmin], async (req,res) => 
 
 });
 
-
+router.get('/getMovieLobbyInCinemaDate/:name/:location/:schedule',[verifyToken], async(req,res) => {
+    let {name, location,schedule} = req.params;
+    let idCinema = await obtainIdCinema(name, location);
+    let sql = "select ml.idMovie,l.lobbyNumber,TO_CHAR(ml.schedule,'HH:MM'),m.name,m.posterImage,m.duration from movie_lobby ml JOIN movie m ON (ml.idMovie=m.idMovie) JOIN lobby l ON (ml.idLobby=l.idLobby) WHERE ml.idLobby IN (select idLobby from lobby WHERE idCinema=:idCinema) AND TO_CHAR(ml.schedule,'YYYY-MM-DD')=:schedule";
+    try {
+        let result = await BD.Open(sql,[idCinema,schedule],true);
+        res.status(200).json({
+            registros:result.rows
+        });
+    } catch (error) {
+        res.status(500).json({
+            ok:false,
+            error
+        });
+    }
+});
 
 const obtainIdCinema = async(name,location) => {
     sql = "select idCinema from cinema where name=:name AND location=:location";
