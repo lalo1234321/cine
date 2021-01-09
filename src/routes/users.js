@@ -75,7 +75,7 @@ router.post('/registerAdmin',async (req,res)=>{
 
 //Usuarios registrados
 router.get('/getClients',[verifyToken,verifyAdmin], async (req, res) => {
-    sql = "select u.idUser,u.firstName,u.lastName,u.age,u.email,c.idClient,c.premium from users u inner join client c on u.iduser = c.iduser";
+    sql = "select * from allClients";
     let result = await BD.Open(sql, [], true);
     LogGetClients('result: ', result);
     res.json({
@@ -86,7 +86,7 @@ router.get('/getClients',[verifyToken,verifyAdmin], async (req, res) => {
 //cliente por id
 router.get('/getClientById/:idClient',[verifyToken,verifyAdmin], async (req, res) => {
     let idClient = req.params.idClient;
-    sql = "select u.idUser, u.firstName, u.age, u.email, c.idClient from users u join client c on (u.idUser=c.idUser) where c.idClient=:idClient";
+    sql = "select * from allClients WHERE idClient=:idClient";
     let result = await BD.Open(sql, [idClient], true);
     LogGetClientById('result: ', result);
     res.json({
@@ -106,8 +106,8 @@ router.get('/getClientByEmail/:email',[verifyToken,verifyAdmin], async (req, res
 
 
 
-router.get('/getAdmins', async (req, res) => {
-    sql = "select * from users inner join admin on users.iduser = admin.iduser";
+router.get('/getAdmins',[verifyToken,verifyAdmin], async (req, res) => {
+    sql = "select * from allAdmins";
     let result = await BD.Open(sql, [], true);
     LogGetAdmins('result: ', result);
     res.json({

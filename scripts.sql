@@ -126,3 +126,29 @@ CONSTRAINT movlo_fk_movie FOREIGN KEY (idMovie)
 REFERENCES movie (idMovie),
 CONSTRAINT movlo_fk_lobyy FOREIGN KEY (idLobby)
 REFERENCES lobby (idLobby));
+
+
+-- Views creation
+
+CREATE VIEW allClients
+AS select u.idUser,u.firstName,u.lastName,u.age,u.email,c.idClient,c.premium from users u inner join client c on u.iduser = c.iduser;
+
+CREATE VIEW allAdmins
+AS select u.idUser,u.firstName, u.lastName, u.age, u.email, u.password, a.idAdmin from users u inner join admin a on u.iduser = a.iduser;
+
+CREATE VIEW allGenders
+AS select * from gender;
+
+CREATE VIEW allMovies
+AS select m.idMovie, m.duration, m.name movieName, m.posterImage,g.name genderName from movie m inner join gender g on (m.idgender=g.idGender);
+
+CREATE VIEW allCinemas
+AS  select c.idCinema, c.name, c.location ,count(distinct(l.idLobby))  lobbies , count(distinct(s.idSeat))/count(distinct(l.idLobby))  seatsPerLobby 
+    from cinema c join lobby l on(c.idCinema=l.idCinema) join seat s on(l.idLobby=s.idLobby)  
+    group by c.idCinema, c.name, c.location ORDER BY c.idCinema;
+
+    
+
+    
+
+

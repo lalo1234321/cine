@@ -32,7 +32,7 @@ router.post('/registerCinema',[verifyToken,verifyAdmin], async (req,res) => {
 
 
 router.get('/getAllCinemasData',[verifyToken,verifyAdmin],async(req,res) => {
-    sql ="select c.idCinema, c.name, c.location ,count(distinct(l.idLobby))  lobbies , count(distinct(s.idSeat))/count(distinct(l.idLobby))  seatsPerLobby from cinema c join lobby l on(c.idCinema=l.idCinema) join seat s on(l.idLobby=s.idLobby)  group by c.idCinema, c.name, c.location ORDER BY c.idCinema";
+    sql ="select * from allCinemas";
     try{
         let result = await BD.Open(sql, [], true);
         res.status(200).json({
@@ -50,7 +50,7 @@ router.get('/getCinemaData/:name/:location',[verifyToken,verifyAdmin], async(req
     let {name, location} = req.params
     console.log(name);
     console.log(location);
-    sql ="select c.idCinema, c.name, c.location ,count(distinct(l.idLobby))  lobbies , count(distinct(s.idSeat))/count(distinct(l.idLobby))  seatsPerLobby from cinema c join lobby l on(c.idCinema=l.idCinema) join seat s on(l.idLobby=s.idLobby) group by c.idCinema, c.name, c.location HAVING c.name=:name AND c.location=:location";
+    sql ="select * from allCinemas where name=:name and location=:location";
     try {
         let result = await BD.Open(sql,[name,location], true);
         res.status(200).json({

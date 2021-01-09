@@ -19,9 +19,21 @@ router.post('/registerGenre',[verifyToken,verifyAdmin],async(req,res)=>{
         })
     }
     
+});
 
-    
 
+router.get('/getGenders',[verifyToken], async(req,res) => {
+    sql = "select * from allGenders"
+    try {
+        let resp = await BD.Open(sql,[],true);
+        res.status(200).json({
+            registros : resp.rows
+        });
+    } catch (error) {
+        res.status(500).json({
+            error
+        });
+    }
 });
 
 module.exports = router;

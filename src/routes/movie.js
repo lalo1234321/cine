@@ -28,7 +28,7 @@ router.post('/registerMovie',[verifyToken,verifyAdmin], async (req,res) => {
 router.get('/getMovieByName/:name',[verifyToken,verifyAdmin], async (req,res) => {
     let name = req.params.name;
     Log('line 30   name: ', name);
-    sql = "select m.idMovie, m.duration, m.name, m.posterImage,g.name from movie m join gender g using (idGender) where m.name=:name";
+    sql = "select * from allMovies WHERE movieName=:name";
     let result = await BD.Open(sql,[name],true);
     res.json({
         Registros:result.rows
@@ -36,7 +36,7 @@ router.get('/getMovieByName/:name',[verifyToken,verifyAdmin], async (req,res) =>
 });
 
 router.get('/getAllMovies',[verifyToken,verifyAdmin], async (req, res) => {
-    sql = "select m.idMovie, m.duration, m.name, m.posterImage,g.name from movie m inner join gender g on (m.idgender=g.idGender)";
+    sql = "select * from allMovies";
     let result = await BD.Open(sql, [], true);
     res.json({
         Registros:result.rows
