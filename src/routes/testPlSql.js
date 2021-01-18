@@ -16,18 +16,17 @@ const BD = require('../config/oracle.js');
 
 
 router.get('/plsql', async(req,res) => {
-    let plsql = `BEGIN
-	DBMS_OUTPUT.PUT_LINE('HOLA MUNDO');
-    END;`;
     try {
         let result = await BD.Open(`BEGIN
-        :ret := myfunc();
+        :propiedad := myfunc();
       END;`,
      {
-       ret: { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 }
+       propiedad: { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 }
      });
      console.log(result.outBinds);
-    
+     res.status(200).json({
+         registros: result.outBinds
+     });
         
     } catch (error) {
         console.log(error);
