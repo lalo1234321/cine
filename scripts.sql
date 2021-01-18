@@ -152,3 +152,24 @@ AS  select c.idCinema, c.name, c.location ,count(distinct(l.idLobby))  lobbies ,
     
 
 
+-- Obtener películas que se van a reproducir
+
+select ml.idMovie,l.lobbyNumber,TO_CHAR(ml.schedule,'HH:MM'),m.name,m.posterImage,m.duration 
+from movie_lobby ml 
+JOIN movie m ON (ml.idMovie=m.idMovie) 
+JOIN lobby l ON (ml.idLobby=l.idLobby) 
+WHERE ml.idLobby 
+IN (select idLobby from lobby WHERE idCinema=:idCinema) AND TO_CHAR(ml.schedule,'YYYY-MM-DD')=:schedule;
+
+select idMovie, TO_CHAR(schedule,'HH::MM') from movie_lobby;
+
+
+
+
+
+select ml.idMovie,l.lobbyNumber,TO_CHAR(ml.schedule,'HH:MM'),m.name,m.posterImage,m.duration 
+from movie_lobby ml 
+JOIN movie m ON (ml.idMovie=m.idMovie) 
+JOIN lobby l ON (ml.idLobby=l.idLobby) 
+WHERE ml.idLobby 
+IN (select idLobby from lobby WHERE idCinema=1) AND TO_CHAR(ml.schedule,'YYYY-MM-DD')='2003-05-03';
