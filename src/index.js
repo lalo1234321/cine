@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
+const testPlSlq = require('./routes/testPlSql.js');
 //settings
 app.set('port', process.env.PORT);
 
@@ -10,7 +11,7 @@ app.set('port', process.env.PORT);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(testPlSlq);
 //routes
 require('./routes/index')(app);
 //run
