@@ -94,14 +94,14 @@ const cinemaQuery = async (name, location) => {
     sql = "select idCinema from cinema where name=:name AND location=:location";
     const result = await BD.Open(sql,[name,location],true);
     // console.log(result.rows[0][0]);
-    return result.rows[0][0];
+    return result.rows[0].IDCINEMA;
 };
 
 const obtainLastInsertLobby = async() => {
     sql = "select * from(select * from lobby order by idLobby desc) where rownum=1";
     let result = await BD.Open(sql,[],true);
-    console.log(result.rows[0][0]);
-    return result.rows[0][0];
+    // console.log(result.rows[0][0]);
+    return result.rows[0].IDLOBBY;
 }
 
 const createSeats = async (idLobby,numberOfSeatPerLobby) => {
