@@ -1,0 +1,16 @@
+CREATE OR REPLACE PROCEDURE myproc (id IN NUMBER, varios OUT NUMBER,p OUT CHAR) AS
+BEGIN
+  SELECT idClient,premium INTO varios, p FROM client WHERE idUser = id;
+END;
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE procMovie (nameMovie IN VARCHAR2, IDMOVIE OUT NUMBER, DURATION OUT NUMBER
+, MOVIENAME OUT VARCHAR2, POSTERIMAGE OUT VARCHAR2, GENDERNAME OUT VARCHAR2) AS
+BEGIN
+    select idmovie, duration, moviename, posterimage, gendername  
+    INTO IDMOVIE, DURATION, MOVIENAME, POSTERIMAGE, GENDERNAME
+    from allMovies WHERE movieName=nameMovie;
+END;
