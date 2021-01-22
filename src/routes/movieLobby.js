@@ -32,7 +32,7 @@ router.post('/registerMovieLobby',[verifyToken,verifyAdmin], async (req,res) => 
 router.get('/getMovieLobbyInCinemaDate/:name/:location/:schedule',[verifyToken], async(req,res) => {
     let {name, location,schedule} = req.params;
     let idCinema = await obtainIdCinema(name, location);
-    let sql = "select ml.idMovie,l.lobbyNumber,TO_CHAR(ml.schedule,'HH:MM'),m.name,m.posterImage,m.duration from movie_lobby ml JOIN movie m ON (ml.idMovie=m.idMovie) JOIN lobby l ON (ml.idLobby=l.idLobby) WHERE ml.idLobby IN (select idLobby from lobby WHERE idCinema=:idCinema) AND TO_CHAR(ml.schedule,'YYYY-MM-DD')=:schedule";
+    let sql = "select ml.idMovie,l.lobbyNumber,TO_CHAR(ml.schedule,'HH:MI') schedule,m.name,m.posterImage,m.duration from movie_lobby ml JOIN movie m ON (ml.idMovie=m.idMovie) JOIN lobby l ON (ml.idLobby=l.idLobby) WHERE ml.idLobby IN (select idLobby from lobby WHERE idCinema=:idCinema) AND TO_CHAR(ml.schedule,'YYYY-MM-DD')=:schedule";
     try {
         let result = await BD.Open(sql,[idCinema,schedule],true);
         res.status(200).json({
@@ -51,7 +51,7 @@ const obtainIdCinema = async(name,location) => {
     let id;
     try {
         let result = await BD.Open(sql,[name,location],true);
-        id = result.rows[0][0];
+        id = result.rows[0].IDCINEMA;
     } catch (error) {
         return error
     }
@@ -66,7 +66,7 @@ const obtainIdLobby = async(idCinema, lobbyNumber) => {
     let id;
     try {
         let result = await BD.Open(sql,[idCinema,lobbyNumber],true);
-        id = result.rows[0][0];
+        id = result.rows[0].IDLOBBY;
     } catch (error) {
         return error
     }
@@ -81,7 +81,7 @@ const obtainIdMovie = async(movieName) => {
     let id;
     try {
         let result = await BD.Open(sql,[movieName],true);
-        id = result.rows[0][0];
+        id = result.rows[0].IDMOVIE;
     } catch (error) {
         return error
     }
