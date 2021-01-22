@@ -9,7 +9,7 @@ router.post('/login',async (req,res) => {
     try{
         sql = "select * from users where email = :email";
         let user = await BD.Open(sql,[email],true);
-        password = await bcrypt.compare(password,user.rows[0][5]);
+        password = await bcrypt.compare(password,user.rows[0].PASSWORD);
         if (!password || !user) {
             const error = new Error("Credenciales no coinciden!");
             error.statusCode = 500;
@@ -19,7 +19,7 @@ router.post('/login',async (req,res) => {
         res.status(200).json({
             result: 'Las contraseñas coinciden',
             token,
-            idUser : user.rows[0][0]
+            idUser : user.rows[0].IDUSER
         });
     }catch(error) {
         res.status(500).json({

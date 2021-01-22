@@ -31,11 +31,11 @@ router.post('/registerClient',async (req,res) => {
         await BD.Open(sql,[firstname,lastname,age,email,password],true);
         result =  await UserQuery(email);
         LogRegisterClient('result: ', result);
-        await clientRegistration(result.rows[0][0]);
+        await clientRegistration(result.rows[0].IDUSER);
         LogRegisterClient('result.rows: ', result.rows);
         res.status(200).json({
         resultado:'Información grabada en la base de datos',
-        hint:result.rows[0][0]
+        hint:result.rows[0].IDUSER
 
         });
     } catch (error) {
@@ -56,11 +56,11 @@ router.post('/registerAdmin',async (req,res)=>{
         await BD.Open(sql,[firstname,lastname,age,email,password],true);
         result = await UserQuery(email);
         LogRegisterAdmin('result: ', result);
-        await adminRegistration(result.rows[0][0]);
+        await adminRegistration(result.rows[0].IDUSER);
         LogRegisterAdmin('result.rows: ', result.rows);
         res.status(200).json({
         resultado:'Información grabada en la base de datos',
-        hint:result.rows[0][0]
+        hint:result.rows[0].IDUSER
 
         }); 
     }catch (error){

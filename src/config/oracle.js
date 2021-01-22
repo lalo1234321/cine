@@ -1,6 +1,6 @@
 const oracledb = require('oracledb');
 
-
+oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT
 cns = {
     user: process.env.BD,
     password: process.env.BD_PASSWORD ,
