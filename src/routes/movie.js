@@ -3,6 +3,7 @@ const {Router} = require('express');
 const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
+const {getMovieByName} = require('../services/moviePlSql');
 const { route } = require('./login.js');
 const Log = require('debug')('registerMovie');
 
@@ -28,10 +29,12 @@ router.post('/registerMovie',[verifyToken,verifyAdmin], async (req,res) => {
 router.get('/getMovieByName/:name',[verifyToken,verifyAdmin], async (req,res) => {
     let name = req.params.name;
     Log('line 30   name: ', name);
-    sql = "select * from allMovies WHERE movieName=:name";
-    let result = await BD.Open(sql,[name],true);
+    // sql = "select * from allMovies WHERE movieName=:name";
+    // let result = await BD.Open(sql,[name],true);
+    console.log(name);
+    let result = await getMovieByName(name);
     res.json({
-        Registros:result.rows
+        Registros:result.outBinds
     });
 });
 
