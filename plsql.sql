@@ -37,3 +37,14 @@ BEGIN
     from allClients 
     WHERE idClient=id;
 END;
+
+
+CREATE OR REPLACE PROCEDURE procCinema (nameCinema IN VARCHAR2, locationCinema IN VARCHAR2,
+IDCINEMA OUT NUMBER, NAME OUT VARCHAR2
+, LOCATION OUT VARCHAR2, LOBBIES OUT NUMBER, SEATSPERLOBBY OUT NUMBER) AS
+BEGIN
+    select idCinema, name, location, lobbies, seatsPerLobby INTO IDCINEMA, NAME, LOCATION, LOBBIES, SEATSPERLOBBY 
+    from allCinemas 
+    WHERE name=nameCinema and location=locationCinema;
+END;
+

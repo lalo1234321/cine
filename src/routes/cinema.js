@@ -4,6 +4,7 @@ const { format } = require('morgan');
 const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
+const {getCinemaDataByNameAndLocation} = require('../services/cinemaPlSql');
 const LogRegisterCinema = require('debug')('registerCinema:registerCinema');
 
 router.post('/registerCinema',[verifyToken,verifyAdmin], async (req,res) => {
@@ -50,11 +51,12 @@ router.get('/getCinemaData/:name/:location',[verifyToken,verifyAdmin], async(req
     let {name, location} = req.params
     console.log(name);
     console.log(location);
-    sql ="select * from allCinemas where name=:name and location=:location";
+    // sql ="select * from allCinemas where name=:name and location=:location";
     try {
-        let result = await BD.Open(sql,[name,location], true);
+        // let result = await BD.Open(sql,[name,location], true);
+        let result = await getCinemaDataByNameAndLocation(name, location);
         res.status(200).json({
-            Registros : result.rows 
+            Registros : result.outBinds 
         });
     } catch (error) {
         res.status(500).json({
