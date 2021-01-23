@@ -27,3 +27,13 @@ BEGIN
     from users u, client c 
     WHERE u.idUser=c.idUser AND u.email=emailClient;
 END;
+
+
+CREATE OR REPLACE PROCEDURE procClientId (id IN VARCHAR2, IDUSER OUT NUMBER, FIRSTNAME OUT VARCHAR2
+, LASTNAME OUT VARCHAR2, AGE OUT NUMBER, EMAIL OUT VARCHAR2, IDCLIENT OUT NUMBER, PREMIUM OUT CHAR) AS
+BEGIN
+    select idUser, firstName, lastName, age, email, idClient, premium 
+    INTO IDUSER, FIRSTNAME, LASTNAME, AGE, EMAIL, IDCLIENT,PREMIUM
+    from allClients 
+    WHERE idClient=id;
+END;

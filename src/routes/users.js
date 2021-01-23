@@ -4,7 +4,7 @@ const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
 const { route } = require('./login.js');
-const {getClientByEmail} = require('../services/userPlSql');
+const {getClientByEmail, getClientById} = require('../services/userPlSql');
 var LogRegisterAdmin = require('debug')('register:registerAdmin'),
 LogDecreaseSequenceNumber = require('debug')('register:decreaseSequenceNumber'),
 LogRegisterClient = require('debug')('register:registerClient'),
@@ -78,6 +78,7 @@ router.post('/registerAdmin',async (req,res)=>{
 router.get('/getClients',[verifyToken,verifyAdmin], async (req, res) => {
     sql = "select * from allClients";
     let result = await BD.Open(sql, [], true);
+   
     LogGetClients('result: ', result);
     res.json({
         Registros:result.rows
@@ -87,11 +88,12 @@ router.get('/getClients',[verifyToken,verifyAdmin], async (req, res) => {
 //cliente por id
 router.get('/getClientById/:idClient',[verifyToken,verifyAdmin], async (req, res) => {
     let idClient = req.params.idClient;
-    sql = "select * from allClients WHERE idClient=:idClient";
-    let result = await BD.Open(sql, [idClient], true);
+    // sql = "select * from allClients WHERE idClient=:idClient";
+    // let result = await BD.Open(sql, [idClient], true);
+    let result = await getClientById(idClient);
     LogGetClientById('result: ', result);
     res.json({
-        Registros:result.rows
+        Registros:result.outBinds
     });
 });
 
