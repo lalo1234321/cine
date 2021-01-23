@@ -37,18 +37,34 @@ router.get('/plsql', async(req,res) => {
         //     p : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 }
         // })
 
+        // let result = await BD.Open(
+        //     `BEGIN
+        //     procMovie(:nameMovie, :IDMOVIE, :DURATION, :MOVIENAME, :POSTERIMAGE, :GENDERNAME );
+        //     END;
+        //     `
+        // ,{
+        //     nameMovie : 'Scary Movie 3',
+        //     IDMOVIE: { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+        //     DURATION : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+        //     MOVIENAME : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+        //     POSTERIMAGE : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+        //     GENDERNAME : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 }
+        // })
+
+
         let result = await BD.Open(
             `BEGIN
-            procMovie(:nameMovie, :IDMOVIE, :DURATION, :MOVIENAME, :POSTERIMAGE, :GENDERNAME );
+            procClient(:emailClient, :IDUSER, :FIRSTNAME, :LASTNAME, :AGE, :EMAIL, :IDCLIENT );
             END;
             `
         ,{
-            nameMovie : 'Scary Movie 3',
-            IDMOVIE: { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
-            DURATION : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
-            MOVIENAME : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
-            POSTERIMAGE : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
-            GENDERNAME : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 }
+            emailClient : 'registro1@gmail.com',
+            IDUSER: { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+            FIRSTNAME : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+            LASTNAME : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+            AGE : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+            EMAIL : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+            IDCLIENT : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 }
         })
 
      console.log(result.outBinds);

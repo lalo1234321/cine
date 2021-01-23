@@ -4,6 +4,7 @@ const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
 const { route } = require('./login.js');
+const {getClientByEmail} = require('../services/userPlSql');
 var LogRegisterAdmin = require('debug')('register:registerAdmin'),
 LogDecreaseSequenceNumber = require('debug')('register:decreaseSequenceNumber'),
 LogRegisterClient = require('debug')('register:registerClient'),
@@ -96,11 +97,12 @@ router.get('/getClientById/:idClient',[verifyToken,verifyAdmin], async (req, res
 
 router.get('/getClientByEmail/:email',[verifyToken,verifyAdmin], async (req, res) => {
     let email = req.params.email;
-    sql = "select u.idUser,u.firstName, u.age, u.email,c.idClient from users u, client c where u.idUser=c.idUser and u.email=:email";
-    let result = await BD.Open(sql, [email], true);
+    // sql = "select u.idUser,u.firstName, u.age, u.email,c.idClient from users u, client c where u.idUser=c.idUser and u.email=:email";
+    // let result = await BD.Open(sql, [email], true);
+    let result = await getClientByEmail(email);
     LogGetClientByEmail('resut: ', result);
     res.json({
-        Registros:result.rows
+        Registros:result.outBinds
     });
 });
 

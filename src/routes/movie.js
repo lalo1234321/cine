@@ -31,7 +31,7 @@ router.get('/getMovieByName/:name',[verifyToken,verifyAdmin], async (req,res) =>
     Log('line 30   name: ', name);
     // sql = "select * from allMovies WHERE movieName=:name";
     // let result = await BD.Open(sql,[name],true);
-    console.log(name);
+    
     let result = await getMovieByName(name);
     res.json({
         Registros:result.outBinds
