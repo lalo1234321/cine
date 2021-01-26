@@ -12,6 +12,16 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(testPlSlq);
+
+// let corsOptions = {
+//     origin: 'http://192.168.100.6:3000',
+//     optionsSuccessStatus: 200, // For legacy browser support
+//     methods: "GET, PUT"
+// }
+app.use(cors());
+
+
+
 //routes
 require('./routes/index')(app);
 //run

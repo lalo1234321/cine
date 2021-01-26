@@ -3,7 +3,7 @@ const {Router} = require('express');
 const router = Router();
 const oracledb = require('oracledb');
 const BD = require('../config/oracle.js');
-
+const cors = require('cors');
 // let connection;
 
 //   try {
@@ -13,7 +13,25 @@ const BD = require('../config/oracle.js');
 //       connectString : "localhost/orclpdb1"
 //     });
 
+// borrar
 
+router.get('/dummy', (req,res) => {
+    res.status(200).json({
+        nombre: 'Ation',
+        edad: 40,
+        correo: 'elburro123@gmail.com',
+        imagenDePerfil:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Donkey_%281246936%29.jpg/250px-Donkey_%281246936%29.jpg'
+    });
+});
+
+router.get('/testing', (req,res) => {
+    res.status(200).json({
+        nombre: 'lalo',
+        edad: 30,
+        correo: '123@gmail.com',
+        imagenDePerfil:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Donkey_%281246936%29.jpg/250px-Donkey_%281246936%29.jpg'
+    });
+});
 
 router.get('/plsql', async(req,res) => {
     try {
