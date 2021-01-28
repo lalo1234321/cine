@@ -54,3 +54,31 @@ exports.getClientById = async(id) => {
 
 
 }
+
+exports.updateData = async(id, firstName, lastName, edad) => {
+    try{
+        let result = await BD.Open(
+            `BEGIN
+                :nombreNuevo := updateName(:id, :firstName);
+                :apellidoNuevo := updateLastName(:id, :lastName);
+                :edadNueva := updateAge(:id, :edad);
+            END;
+            `
+        ,{
+            id,
+            firstName,
+            lastName,
+            edad,
+            nombreNuevo : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+            apellidoNuevo : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
+            edadNueva : { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 }
+        },true);
+        return result;
+
+    }catch(error) {
+        return error;
+    }
+
+
+}
+

@@ -48,3 +48,42 @@ BEGIN
     WHERE name=nameCinema and location=locationCinema;
 END;
 
+
+
+-- function for updating 
+
+create or replace function updateName(id NUMBER, nombre VARCHAR2) 
+return VARCHAR2 
+as
+    actualName VARCHAR2(100);
+begin
+    UPDATE users set firstname=nombre
+    WHERE iduser=id;
+    select firstname INTO actualName from users
+    WHERE iduser=id;
+    return actualName;
+end;
+
+create or replace function updateLastName(id NUMBER, ap VARCHAR2) 
+return VARCHAR2 
+as
+    actualAp VARCHAR2(100);
+begin
+    UPDATE users set lastname=ap
+    WHERE iduser=id;
+    select lastName INTO actualAp from users
+    WHERE iduser=id;
+    return actualAp;
+end;
+
+create or replace function updateAge(id NUMBER, edad NUMBER) 
+return NUMBER 
+as
+    actualAge VARCHAR2(100);
+begin
+    UPDATE users set age=edad
+    WHERE iduser=id;
+    select age INTO actualAge from users
+    WHERE iduser=id;
+    return actualAge;
+end;

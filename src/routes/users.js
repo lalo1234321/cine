@@ -4,7 +4,7 @@ const router = Router();
 const BD = require('../config/oracle.js');
 const {verifyToken,verifyAdmin} = require('../middlewares/isAuth');
 const { route } = require('./login.js');
-const {getClientByEmail, getClientById} = require('../services/userPlSql');
+const {getClientByEmail, getClientById,updateData} = require('../services/userPlSql');
 var LogRegisterAdmin = require('debug')('register:registerAdmin'),
 LogDecreaseSequenceNumber = require('debug')('register:decreaseSequenceNumber'),
 LogRegisterClient = require('debug')('register:registerClient'),
@@ -117,6 +117,23 @@ router.get('/getAdmins',[verifyToken,verifyAdmin], async (req, res) => {
     res.json({
         Registros:result.rows
     });
+});
+
+router.put('/updateData',[verifyToken], async(req,res) => {
+    let {firstName, lastName, edad} = req.body;
+    let id = req.id;
+    try {
+        let result = await updateData(id, firstName, lastName, edad);
+        res.status(200).json({
+            Registros: result.outBinds
+        });
+    }catch(error) {
+        res.status(500).json({
+            error
+        })
+    }
+
+    
 });
 
 async function clientRegistration  (idUser){
